@@ -1,0 +1,16 @@
+<!-- home.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Welcome Home</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='homestyle.css') }}">
+</head>
+<body>
+    <div class="welcome-container">
+        <h2>Welcome Home, {{ username }}!</h2>
+        <a href="/view_past_locations" class="view-locations-button">View Past Locations</a>
+        <a href="/restaurants" class="restaurants-button">Find Nearby Restaurants</a>
+        <a href="/logout" class="logout-button">Logout</a>
+    </div>
+</body>
+</html>

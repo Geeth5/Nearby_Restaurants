@@ -1,0 +1,46 @@
+<!-- view_past_locations.html -->
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View Past Locations</title>
+    <style>
+        body {
+            background-color: #F6F1E9;
+        }
+
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+
+<body>
+    <h2 style="color:#4F200D;text-align: center;">View Past Locations</h2>
+    <div id="map"></div>
+
+    <script>
+        var pastLocations = JSON.parse('{{ past_locations_json | safe }}');
+
+        function initMap() {
+            var map = new google.maps.Map(document.getElementById('map'), {
+                center: { lat: 0, lng: 0 }, 
+                zoom: 2 
+            });
+
+            pastLocations.forEach(function (location) {
+                var latLng = new google.maps.LatLng(location.latitude, location.longitude);
+                var marker = new google.maps.Marker({
+                    position: latLng,
+                    map: map
+                });
+            });
+        }
+    </script>
+    <!-- Replace google API after key="" -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
+        async defer></script>
+</body>
+
+</html>

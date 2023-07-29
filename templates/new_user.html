@@ -1,0 +1,47 @@
+<!-- new_user.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>New User Registration</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='newuserstyle.css') }}">
+</head>
+<body>
+    <div class="registration-container">
+        <h2>New User Registration</h2>
+        <form id="registration-form">
+            <input type="text" id="username" name="username" placeholder="username" required>
+            <input type="password" id="password" name="password" placeholder="password" required>
+            <input type="hidden" id="latitude" name="latitude" value="">
+            <input type="hidden" id="longitude" name="longitude" value="">
+            <button type="button" id="register-button">Register</button>
+        </form>
+    </div>
+
+    <script>
+        navigator.geolocation.getCurrentPosition(function(position) {
+            document.getElementById('latitude').value = position.coords.latitude;
+            document.getElementById('longitude').value = position.coords.longitude;
+        });
+
+        document.getElementById('register-button').addEventListener('click', function() {
+            const form = document.getElementById('registration-form');
+            const formData = new FormData(form);
+
+            fetch('/new_user', {
+                method: 'POST',
+                body: formData
+            })
+            .then(response => {
+                if (response.ok) {
+                    window.location.href = '/user_home';
+                } else {
+                    console.error('Registration failed.');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+            });
+        });
+    </script>
+</body>
+</html>

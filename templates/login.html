@@ -1,0 +1,49 @@
+<!-- login.html -->
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Login</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='loginstyle.css') }}">
+</head>
+<body>
+<div class="login-form">
+    <form action="/login" method="post">
+      <h1 style="color:#4F200D;text-align: center;">Login</h1>
+        <div class="content">
+            <div class="input-field">
+                <input type="text" name="username" placeholder="Username">
+            </div>
+            <div class="input-field">
+                <input type="password" name="password" placeholder="Password">
+            </div>
+            <input type="hidden" id="latitude" name="latitude">
+            <input type="hidden" id="longitude" name="longitude">
+        </div>
+        <div class="action">
+            <button type="submit">Submit</button>
+        </div>
+    </form>
+</div>
+
+<div style="text-align: center;">
+  <a href="/new_user" class="new-user-button" style="text-align: center;">New User</a>
+</div>
+
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        // Get geolocation
+        navigator.geolocation.getCurrentPosition(function(position) {
+            const latitudeInput = document.getElementById('latitude');
+            const longitudeInput = document.getElementById('longitude');
+
+            if (latitudeInput && longitudeInput) {
+                latitudeInput.value = position.coords.latitude;
+                longitudeInput.value = position.coords.longitude;
+            }
+        });
+    });
+</script>
+
+</body>
+</html>

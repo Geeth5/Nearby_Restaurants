@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>Nearby Restaurants</title>
+    <link rel="stylesheet" type="text/css" href="{{ url_for('static', filename='restaurantstyle.css') }}">
+</head>
+
+<body>
+    <h2 style="color:#4F200D;text-align: center;">Nearby Restaurants</h2>
+    <div class="button-container">
+        <button id="list-view-btn" onclick="showListView()">List View</button>
+        <button id="map-view-btn" onclick="showMapView()">Map View</button>
+    </div>
+    <div id="list-view">
+        <ul>
+            {% for restaurant in restaurants %}
+            <li>
+                <strong><p>{{ restaurant.name }}</p></strong><br>
+                {{ restaurant.address }}
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+    <div id="map-view" style="display: none;">
+        <div id="map"></div>
+    </div>
+
+    <script>
+        let map;
+        let markers = [];
+        const restaurantsData = JSON.parse('{{ restaurants|tojson|safe }}');
+
+        function showListView() {
+            document.getElementById('list-view').style.display = 'block';
+            document.getElementById('map-view').style.display = 'none';
+        }
+
+        function showMapView() {
+            document.getElementById('list-view').style.display = 'none';
+            document.getElementById('map-view').style.display = 'block';
+            initializeMap();
+            addMarkers();
+        }
+
+        document.getElementById('list-view').style.display = 'none';
+        document.getElementById('map-view').style.display = 'block';
+
+        initializeMap();
+
+        function initializeMap() {
+            map = new google.maps.Map(document.getElementById('map'), {
+                center: {
+                    lat: 12.8854167,
+                    lng: 77.5953288,
+                },
+                zoom: 14, 
+            });
+        }
+
+        function addMarkers() {
+            clearMarkers();
+
+            for (const restaurant of restaurantsData) {
+                const latitude = restaurant.latitude;
+                const longitude = restaurant.longitude;
+                addMarker(latitude, longitude, restaurant.name, restaurant.address);
+            }
+        }
+
+        function addMarker(latitude, longitude, name, address) {
+            const marker = new google.maps.Marker({
+                position: { lat: latitude, lng: longitude },
+                map: map,
+                title: name
+            });
+
+            const infowindow = new google.maps.InfoWindow({
+                content: `<strong>${name}</strong><br>${address}`
+            });
+
+            marker.addListener('click', () => {
+                infowindow.open(map, marker);
+            });
+
+
+            markers.push(marker);
+        }
+
+        function clearMarkers() {
+            for (const marker of markers) {
+                marker.setMap(null);
+            }
+
+            markers = [];
+        }
+    </script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=&callback=initMap"
+        async defer></script>
+</body>
+
+</html>
